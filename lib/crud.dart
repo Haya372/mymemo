@@ -1,6 +1,8 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
+Crud crud = new Crud();
+
 class Crud {
   static Future<Database> get database async {
     final Future<Database> _database = openDatabase(

@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'crud.dart';
-
-Crud crud = new Crud();
+import 'listview.dart';
+import 'createpage.dart';
 
 void main() {
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  final RouteObserver<PageRoute> routeObserver = new RouteObserver<PageRoute>();
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -25,20 +26,27 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(),
+      home: MyHomePage(routeObserver),
+      navigatorObservers: <NavigatorObserver>[routeObserver],
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
+  final RouteObserver<PageRoute> routeObserver;
+  MyHomePage(this.routeObserver);
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
 
-  void _createMemo() async {
-    await crud.insert(title: "title", text: "content", tag: 2);
+  void _createMemo() {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (BuildContext context) {
+        return MyCreatePage(widget.routeObserver);
+      }
+    ));
   }
 
   @override
@@ -59,17 +67,17 @@ class _MyHomePageState extends State<MyHomePage> {
                 text: "SHOP"
               ),
               Tab(
-                text: "OTHERS"
+                text: "OTHER"
               ),
             ],
           ),
         ),
         body: TabBarView(
           children: [
-            Text('all'),
-            Text('study'),
-            Text('shopping'),
-            Text('others')
+            MyListView(-1),
+            MyListView(0),
+            MyListView(1),
+            MyListView(2)
           ],
         ),
         floatingActionButton: FloatingActionButton(
