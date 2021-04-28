@@ -1,35 +1,25 @@
 import 'package:flutter/material.dart';
 import 'crud.dart';
 
-class MyCreatePage extends StatefulWidget{
-  MyCreatePage();
+class MyEditPage extends StatefulWidget{
+  final Map memo;
+  MyEditPage(this.memo);
   @override
-  _MyCreatePageState createState() => _MyCreatePageState();
+  _MyEditPageState createState() => _MyEditPageState();
 }
 
-class _MyCreatePageState extends State<MyCreatePage> {
-  String _title = "";
-  String _text = "";
-  int _tag = 2;
-
+class _MyEditPageState extends State<MyEditPage> {
+  int _tag;
+  TextEditingController _titleController;
+  TextEditingController _textController;
 
   @override
-  void dispose() {
-    if(_title.length != 0) crud.insert(title: _title, text: _text, tag: _tag);
-    super.dispose();
-  }
+void initState() {
+  super.initState();
 
-  void _handleTitle(String e) {
-    setState(() {
-      _title = e;
-    });
-  }
-
-  void _handleText(String e) {
-    setState(() {
-      _text = e;
-    });
-  }
+  _titleController = TextEditingController(text: widget.memo["title"]);
+  _textController = TextEditingController(text: widget.memo["text"]);
+}
 
   void _onTagChanged(int value){
     setState(() {
@@ -38,7 +28,18 @@ class _MyCreatePageState extends State<MyCreatePage> {
   }
 
   @override
+  void dispose() {
+    String title = _titleController.text;
+    String text = _textController.text;
+    crud.update(id: widget.memo["id"], title: title, text: text, tag: _tag);
+    _titleController.dispose();
+    _textController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    if(_tag == null) _tag = widget.memo["tag"];
     return Scaffold(
         appBar: AppBar(
         ),
@@ -50,7 +51,7 @@ class _MyCreatePageState extends State<MyCreatePage> {
                 fontWeight: FontWeight.bold,
                 fontSize: 28
               ),
-              onChanged: _handleTitle,
+              controller: _titleController,
             ),
             Row(
               children: [
@@ -91,7 +92,7 @@ class _MyCreatePageState extends State<MyCreatePage> {
                   border: InputBorder.none,
                   contentPadding: EdgeInsets.all(10)
                 ),
-                onChanged: _handleText,
+                controller: _textController,
               ),
             )
           ],

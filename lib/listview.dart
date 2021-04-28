@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'crud.dart';
+import 'editpage.dart';
 
 class MyListView extends StatefulWidget {
   final int tag;
@@ -36,13 +37,18 @@ class _MyListViewState extends State<MyListView> {
 class ItemWidget extends StatefulWidget {
   final Map memo;
   ItemWidget(this.memo);
+  
   @override
   _ItemWidgetState createState() => _ItemWidgetState();
 }
 
 class _ItemWidgetState extends State<ItemWidget> {
   void _handleTap() {
-    print('tapped');
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (BuildContext context) {
+        return MyEditPage(widget.memo);
+      }
+    ));
   }
 
 

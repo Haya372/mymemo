@@ -8,7 +8,6 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  final RouteObserver<PageRoute> routeObserver = new RouteObserver<PageRoute>();
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -26,15 +25,13 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(routeObserver),
-      navigatorObservers: <NavigatorObserver>[routeObserver],
+      home: MyHomePage(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  final RouteObserver<PageRoute> routeObserver;
-  MyHomePage(this.routeObserver);
+  MyHomePage();
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
@@ -44,7 +41,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void _createMemo() {
     Navigator.of(context).push(MaterialPageRoute(
       builder: (BuildContext context) {
-        return MyCreatePage(widget.routeObserver);
+        return MyCreatePage();
       }
     ));
   }
