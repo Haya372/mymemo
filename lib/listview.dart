@@ -10,23 +10,32 @@ class MyListView extends StatefulWidget {
 }
 
 class _MyListViewState extends State<MyListView> {
-  List<Map> memos = [];
+  Future<List<Map>> memos;
 
-  Future<List<Map>> _getData() async {
-    Future<List<Map>> res = widget.tag == -1 ? crud.selectAll() : crud.select(widget.tag);
-    return res;
+  @override
+  void initState () {
+    super.initState();
+    memos = widget.tag == -1 ? crud.selectAll() : crud.select(widget.tag);
+  }
+
+  void _handleTap(Map memo) {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (BuildContext context) {
+        return MyEditPage(memo);
+      }
+    ));
   }
 
   @override
   Widget build(BuildContext context){
     return FutureBuilder(
-      future: _getData(),
+      future: memos,
       builder: (BuildContext context, AsyncSnapshot<List<Map>> snapshot) {
-        if(snapshot.hasData) memos = snapshot.data;
+        List<Map> datas = snapshot.hasData ? snapshot.data : [];
         return ListView(
           children: [
-            for(Map memo in memos)
-              ItemWidget(memo),
+            for(Map memo in datas)
+              ItemWidget(memo, _handleTap),
           ]
         );
       }
@@ -36,19 +45,16 @@ class _MyListViewState extends State<MyListView> {
 
 class ItemWidget extends StatefulWidget {
   final Map memo;
-  ItemWidget(this.memo);
-  
+  final ValueChanged<Map> onTapped;
+  ItemWidget(this.memo, this.onTapped);
+
   @override
   _ItemWidgetState createState() => _ItemWidgetState();
 }
 
 class _ItemWidgetState extends State<ItemWidget> {
   void _handleTap() {
-    Navigator.of(context).push(MaterialPageRoute(
-      builder: (BuildContext context) {
-        return MyEditPage(widget.memo);
-      }
-    ));
+    widget.onTapped(widget.memo);
   }
 
 

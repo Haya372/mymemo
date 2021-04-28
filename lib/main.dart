@@ -36,10 +36,10 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage> with RouteAware {
 
-  void _createMemo() {
-    Navigator.of(context).push(MaterialPageRoute(
+  void _createMemo() async {
+    await Navigator.of(context).push(MaterialPageRoute(
       builder: (BuildContext context) {
         return MyCreatePage();
       }
