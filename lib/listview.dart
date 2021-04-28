@@ -9,6 +9,8 @@ class MyListView extends StatefulWidget {
 }
 
 class _MyListViewState extends State<MyListView> {
+  List<Map> memos = [];
+
   Future<List<Map>> _getData() async {
     Future<List<Map>> res = widget.tag == -1 ? crud.selectAll() : crud.select(widget.tag);
     return res;
@@ -19,20 +21,62 @@ class _MyListViewState extends State<MyListView> {
     return FutureBuilder(
       future: _getData(),
       builder: (BuildContext context, AsyncSnapshot<List<Map>> snapshot) {
-        List<Map> memos = snapshot.data;
-        if(!snapshot.hasData) memos = [];
+        if(snapshot.hasData) memos = snapshot.data;
         return ListView(
           children: [
             for(Map memo in memos)
-              Card(
-                child: Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Text(memo['title']),
-                )
-              ),
+              ItemWidget(memo),
           ]
         );
       }
+    );
+  }
+}
+
+class ItemWidget extends StatefulWidget {
+  final Map memo;
+  ItemWidget(this.memo);
+  @override
+  _ItemWidgetState createState() => _ItemWidgetState();
+}
+
+class _ItemWidgetState extends State<ItemWidget> {
+  void _handleTap() {
+    print('tapped');
+  }
+
+
+  void _handleDelete(DismissDirection direction){
+    crud.delete(widget.memo["id"]);
+  }
+
+  @override
+  Widget build(BuildContext context){
+    return Dismissible(
+      key: ValueKey<int>(widget.memo['id']),
+      child: GestureDetector(
+        child: ListTile(
+            title: Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Text(widget.memo['title']),
+          )
+        ),
+        onTap: _handleTap,
+      ),
+      direction: DismissDirection.endToStart,
+      onDismissed: _handleDelete,
+      background: Container(
+        color: Colors.red,
+        child: Row(
+          children: [
+            Padding(
+              child : Icon(Icons.delete, color: Colors.white,),
+              padding: EdgeInsets.all(8),
+            )
+          ],
+          mainAxisAlignment: MainAxisAlignment.end,
+        ),
+      ),
     );
   }
 }
