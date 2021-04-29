@@ -37,7 +37,13 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> with RouteAware {
-
+  List<MyListView> tabViews = [
+    MyListView(-1),
+    MyListView(0),
+    MyListView(1),
+    MyListView(2)
+  ];
+  
   void _createMemo() async {
     await Navigator.of(context).push(MaterialPageRoute(
       builder: (BuildContext context) {

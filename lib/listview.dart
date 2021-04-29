@@ -18,12 +18,23 @@ class _MyListViewState extends State<MyListView> {
     memos = widget.tag == -1 ? crud.selectAll() : crud.select(widget.tag);
   }
 
-  void _handleTap(Map memo) {
-    Navigator.of(context).push(MaterialPageRoute(
+  void _handleTap(Map memo) async {
+    await Navigator.of(context).push(MaterialPageRoute(
       builder: (BuildContext context) {
-        return MyEditPage(memo);
+        return MyEditPage(memo, widget.tag, updatePage);
       }
     ));
+
+    setState(() {
+      memos = widget.tag == -1 ? crud.selectAll() : crud.select(widget.tag);
+    });
+  }
+
+  void updatePage(int tag){
+    print('update');
+    setState(() {
+      memos = tag == -1 ? crud.selectAll() : crud.select(widget.tag);
+    });
   }
 
   @override

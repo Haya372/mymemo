@@ -3,7 +3,9 @@ import 'crud.dart';
 
 class MyEditPage extends StatefulWidget{
   final Map memo;
-  MyEditPage(this.memo);
+  final int parentTag;
+  final ValueChanged<int> updateMemos;
+  MyEditPage(this.memo, this.parentTag, this.updateMemos);
   @override
   _MyEditPageState createState() => _MyEditPageState();
 }
@@ -31,7 +33,9 @@ void initState() {
   void dispose() {
     String title = _titleController.text;
     String text = _textController.text;
-    crud.update(id: widget.memo["id"], title: title, text: text, tag: _tag);
+    crud.update(id: widget.memo["id"], title: title, text: text, tag: _tag).then((value) => {
+      widget.updateMemos(widget.parentTag)
+    });
     _titleController.dispose();
     _textController.dispose();
     super.dispose();
